@@ -3,7 +3,8 @@ import { FaWhatsapp } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import AlterarEmail from '../pop-ups/AlterarEmail';
 import AlterarSenha from '../pop-ups/AlterarSenha';
-import AdicionarTag from '../pop-ups/AdicionarTag';
+import AdicionarTag from '../pop-ups/AdicionarTag/AdicionarTag';
+import DeletarConta from '../pop-ups/DeletarConta';
 
 import { useState } from 'react';
 
@@ -39,8 +40,8 @@ export default function EditarPerfil(props) {
           </div>
 
           <div className={`form-inputs ${styles.formInputs}`}>
-            <input className={styles.input} type="text" placeholder="Nome Completo" maxLength={64}/>
-            <input className={styles.input} type="text" placeholder="Nome Artístico" maxLength={64}/>
+            <input className={styles.input} type="text" placeholder="Nome Completo" maxLength={64} />
+            <input className={styles.input} type="text" placeholder="Nome Artístico" maxLength={64} />
           </div>
 
 
@@ -50,7 +51,7 @@ export default function EditarPerfil(props) {
           <h3 className={styles.subtitulo}>Tags:</h3>
           <button id={styles.adicionarTag} type="button" onClick={() => setPopup("tags")}>+</button>
 
-          <h3 className={styles.subtitulo}>Contato</h3>
+          <h3 className={styles.subtitulo}>Contato:</h3>
 
           <div className={styles.iconesContato}>
             <FaWhatsapp />
@@ -58,12 +59,18 @@ export default function EditarPerfil(props) {
             <FaInstagram />
             <input className={styles.input} type="text" placeholder="Usuário do Instagram" />
           </div>
+
+          <div className={styles.deletarSalvar}>
+            <button type="submit">SALVAR</button>
+            <button id={styles.deletarConta} type="button" onClick={() => setPopup("deletar")}>DELETAR CONTA</button>
+          </div>
         </form>
 
         {/* Essa parte de pop-up eu tive que pesquisar por fora e fiz junto com o Copilot */}
         {popup === 'email' && <AlterarEmail clicado={true} fechar={() => setPopup(null)} />}
         {popup === 'senha' && <AlterarSenha clicado={true} fechar={() => setPopup(null)} />}
         {popup === 'tags' && <AdicionarTag clicado={true} fechar={() => setPopup(null)} />}
+        {popup === 'deletar' && <DeletarConta clicado={true} fechar={() => setPopup(null)} />}
       </main>
     </>
   );

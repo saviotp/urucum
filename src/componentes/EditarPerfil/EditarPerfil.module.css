@@ -79,6 +79,8 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
+    justify-content: center;
+    align-items: center;
 
     /*Tamanho dos ícones*/
     font-size: 32px;

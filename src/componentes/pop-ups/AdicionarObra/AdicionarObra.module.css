@@ -1,0 +1,31 @@
+.descricao {
+    min-height: 17rem;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+
+    font-family: sans-serif;
+}
+
+.subtitulo {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #134313;
+    font-size: 20px;
+    display: block;
+    font-family: sans-serif;
+}
+
+.tamanho {
+    margin: 0;
+    font-size: 12px;
+    font-family: sans-serif;
+    color: grey;
+}
+
+.imagem {
+    display: flex;
+    gap: 10px;
+    margin-top: -15px;
+}

@@ -57,7 +57,16 @@ export default function PaginaInicial() {
               <p className="nao-existe">Nenhum artista encontrado.</p>
             ) : (
               artistas.map((artista, index) => (
-                <div key={index} className="cartinha-artista">
+                <div key={index} className="cartinha-artista" onClick={() => {
+
+                  /* 
+                    Também não sabia desse window.location.href,
+                    ele puxa o nome do artista e coloca na URL da página, assim cada artista vai ter uma página comn o link do seu nome
+                    vou só trocar pra ID (caso não tenha sido implementado)
+                  */
+
+                  window.location.href = `/perfil-artista?name=${artista.name}`;
+                }}>
                   <img src={artista.image} alt={artista.name} />
                   <div className="foto-perfil-artista">
                     <img src={artista.image} alt={artista.name} />

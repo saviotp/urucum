@@ -47,6 +47,12 @@
     gap: 10px;
 }
 
+.popup-form p {
+    margin: 0;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
 .popup-form input {
     margin-top: 10px;
     padding: 10px 20px;
@@ -69,3 +75,42 @@
     display: flex;
     justify-content: space-between;
 }
+
+.texto-vermelho {
+    color: #aa0000;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.enviar-imagem {
+    display: inline-block;
+    width: 160px;
+    height: 150px;
+    text-align: center;
+    margin-top: 20px;
+
+    /*
+        Outra parada que eu n sabia era que o justify-content e align-items só funfa se for ou grid, ou flex
+        achei que o display já deixava
+        Aí fiz uma maracutaia de centralizar usando o line-height
+    */
+
+    line-height: 150px;
+    border: 1px solid #ccc;
+    font-family: sans-serif;
+    background-color: #f8f9fa;
+    color: #495057;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 5%;
+}
+
+.enviar-imagem:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.esconder-entrada-padrao {
+    display: none;
+}
+

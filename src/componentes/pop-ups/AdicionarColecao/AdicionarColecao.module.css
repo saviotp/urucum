@@ -1,0 +1,91 @@
+.tamanho {
+    font-size: 12px;
+    color: grey;
+}
+
+.imagem {
+    margin-top: -20px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.descricaoContainer {
+    display: flex;
+    gap: 3rem;
+}
+
+.descricao {
+    resize: none;
+    font-family: sans-serif;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-height: 16rem;
+    min-width: 23rem;
+}
+
+.subtitulo {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #134313;
+    font-size: 20px;
+    display: block;
+    font-family: sans-serif;
+}
+
+.botoesAdicionarColecao {
+    margin-top: -15px;
+    display: flex;
+    gap: 10px;
+}
+
+.textoImagem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Selected Obras Styles */
+.obrasSelecionadas {
+    margin-top: 15px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.obraSelecionada {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 5px 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.obraSelecionada span {
+    font-family: sans-serif;
+    color: #333;
+}
+
+.removerObra {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.removerObra:hover {
+    background-color: #c82333;
+}
