@@ -1,6 +1,7 @@
 import "../../../estilos/PopUps.css";
 import styles from "./DenunciarConta.module.css";
-import { useState } from "react";
+import { useState } from "react"; 
+import { contador } from "../../classes/UsuarioUtils.jsx";
 
 export default function DenunciarConta(props) {
 
@@ -27,11 +28,14 @@ export default function DenunciarConta(props) {
           </select>
           
           {motivoSelecionado === "outro" && (
-            <input type="text" placeholder="Descreva o motivo da denúncia" value={outroMotivo} onChange={(e) => setOutroMotivo(e.target.value)} maxLength={32}/>
+            <>
+              <input type="text" placeholder="Descreva o motivo da denúncia" value={outroMotivo} onChange={(e) => setOutroMotivo(e.target.value)} maxLength={32}/>
+              <p className="texto-limite">Tamanho máximo de 32 caracteres ({contador(outroMotivo, 32)} restantes)</p>
+            </>
           )}
 
           <textarea className={styles.detalheDenuncia} name="detalhe" id="" placeholder="Detalhe a sua denúncia" maxLength={500}></textarea>
-          <p>Tamanho máximo de 500 caracteres</p>
+          <p>Tamanho máximo de 500 caracteres ({contador(document.querySelector('textarea[name="detalhe"]')?.value || "", 500)} restantes)</p>
           
           <div className="botoes-popup">
             <button className="botao-cancelar" type="button" onClick={props.fechar}>CANCELAR</button>

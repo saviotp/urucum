@@ -1,14 +1,19 @@
-import CabecalhoImagem from "./CabecalhoImagem";
-import "../../estilos/cabecalhos/CabecalhoGeral.css";
+import CabecalhoGeral from "./CabecalhoGeral";
+import { useLocation } from "react-router-dom";
 
-export default function CabecalhoPerfilUsuario() {
-    return (
-        <CabecalhoImagem>
-            <header className="cabecalhoGeral">
-                <h1>Nome do Artista</h1>
-                <button>Página Inicial</button>
-                <button>Criar Perfil</button>
-            </header>
-        </CabecalhoImagem>
-    );
+export default function CabecalhoPerfilUsuario(props) {
+  const localizacao = useLocation();
+  const estaNaPaginaInicial = localizacao.pathname === '/';
+
+  const titulo = estaNaPaginaInicial
+    ? "Página Inicial"
+    : (props.artista?.nomeArtistico || props.artista?.nomeCompleto);
+
+  return (
+    <CabecalhoGeral
+      titulo={titulo}
+      mostrarBotaoPaginaInicial={!estaNaPaginaInicial}
+      mostrarBotaoCriarPerfil={true}
+    />
+  );
 }

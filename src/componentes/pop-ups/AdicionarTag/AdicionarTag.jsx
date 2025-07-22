@@ -2,11 +2,18 @@ import "../../../estilos/PopUps.css";
 import styles from "./AdicionarTag.module.css";
 
 import { useState, useEffect } from "react";
+import { contador } from "../../classes/UsuarioUtils.jsx";
 
 export default function AdicionarTag(props) {
 
   const [pesquisarTag, setPesquisarTag] = useState("");
   const [tagsAdicionadas, setTagsAdicionadas] = useState([]);
+
+  useEffect(() => {
+    if (props.tagsExistentes) {
+      setTagsAdicionadas(props.tagsExistentes);
+    }
+  }, [props.tagsExistentes]);
 
     const tags = [
       "Música",
@@ -28,6 +35,12 @@ export default function AdicionarTag(props) {
         alert("Tag já adicionada!");
       }
     }
+
+    useEffect(() => {
+      if (props.mudancaTags) {
+        props.mudancaTags(tagsAdicionadas);
+      }
+    }, [tagsAdicionadas, props]);
 
     function RemoverTag(tag) {
       setTagsAdicionadas(tagsAntigas => {
@@ -51,8 +64,9 @@ export default function AdicionarTag(props) {
               placeholder="Pesquise uma Tag" 
               maxLength={32} 
               value={pesquisarTag}
-              onChange={(e) => setPesquisarTag(e.target.value)}
+              onChange={(event) => setPesquisarTag(event.target.value)}
             />
+            <p className={styles.textoLimite}>Tamanho máximo de 32 caracteres ({contador(pesquisarTag, 32)} restantes)</p>
 
             <table className={`tabela-tags ${styles.tabelaTags}`}>
               <thead>
@@ -100,8 +114,8 @@ export default function AdicionarTag(props) {
             </table>
 
             <div className="botoes-popup">
-              <button type="submit">SALVAR</button>
               <button className="botao-cancelar" type="button" onClick={props.fechar}>CANCELAR</button>
+              <button type="button" onClick={() => [props.salvar(tagsAdicionadas), props.fechar()]}>SALVAR</button>
             </div>
           </form>
         </div>

@@ -1,0 +1,147 @@
+/* Navigation container for works in collection */
+.navegacaoObras {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+/* Navigation arrow buttons */
+.botaoSeta {
+    background-color: #134313;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    min-width: 50px;
+    min-height: 50px;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Prevent arrows from shrinking */
+}
+
+.botaoSeta:hover:not(:disabled) {
+    background-color: #0b2a0b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Descobri que precisa botar esse !important pra ele dar override */
+.botaoSeta:disabled {
+    background-color: #ccc !important;
+    color: #999 !important;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Ensure disabled buttons don't change on hover */
+.botaoSeta:disabled:hover {
+    background-color: #ccc !important;
+    color: #999 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Content area between arrows */
+.obraContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0; /* Allows content to shrink if needed */
+}
+
+/* Counter for current work position */
+.contadorObras {
+    text-align: center;
+    font-weight: bold;
+    font-family: sans-serif;
+    color: #134313;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Empty collection message */
+.colecaoVazia {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+    border-radius: 8px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons for individual works within collection */
+.botoesObra {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.popup-content .botoesObra .botaoDenunciar {
+    width: 15%;
+    height: 50px;
+    background-color: #aa0000;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 12px;
+    margin: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.popup-content .botoesObra .botaoDenunciar:hover {
+    background-color: #8a0000;
+    transform: translateY(-1px);
+}
+
+.botoesObra .botaoCompartilhar {
+    background-color: #134313;
+    color: white;
+    border: none;
+    display: flex;
+    width: 10%;
+    height: 50px;
+    margin: 0;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+}
+
+.botoesObra .botaoCompartilhar:hover {
+    background-color: #0b2a0b;
+    transform: translateY(-1px);
+}
+
+/* Collection description */
+.descricaoColecao {
+    margin: 0;
+    line-height: 1.6;
+    color: #333;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    font-family: sans-serif;
+}

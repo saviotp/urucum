@@ -17,7 +17,7 @@ export default function AdicionarObra() {
           <div>
               <img src="" alt="" />
               <h3>Enviar Arquivo</h3>
-              <p>Tamanho máximo de 20mb</p>
+              <p>Tamanho máximo de 10mb</p>
           </div>
 
           <div>

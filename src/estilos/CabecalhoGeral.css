@@ -24,11 +24,13 @@
     height: 70px;
     border-radius: 50%;
     background-color: grey;
-    
     margin-right: 30px;
+    cursor: pointer;
+    overflow: hidden;
 
-    /* Centraliza o texto */
+    /* Centraliza o conteúdo */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -37,9 +39,21 @@
 }
 
 .fotoPerfil img {
-    display: flex;
-    align-items: center;
-    color: white;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.nome-usuario {
+    font-size: 10px;
+    color: #134313;
+    font-weight: bold;
+    margin-top: 2px;
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 h1 {
@@ -47,4 +61,28 @@ h1 {
     font-family: sans-serif;
 
     color: #134313;
+}
+
+.deslogar {
+    padding: 12px;
+    border-radius: 20px;
+    border: none;
+    background-color: #d32f2f;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: auto;
+    height: auto;
+    margin-right: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+}
+
+.deslogar:hover {
+    background-color: #b71c1c;
 }

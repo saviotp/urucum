@@ -1,2 +1,14 @@
 package-lock.json
 node_modules/
+serviceAccountKey.json
+.env
+.env.local
+*.log
+*.sqlite
+*.db
+.DS_Store
+.vscode/
+.cache/
+dist/
+build/
+src/componentes/Firebase.jsx

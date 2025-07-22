@@ -9,4 +9,6 @@
 .cabecalho img {
     width: 137px;
     height: 132px;
+
+    cursor: pointer;
 }

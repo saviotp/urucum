@@ -1,15 +1,17 @@
-import CabecalhoImagem from "./CabecalhoImagem/CabecalhoImagem";
-import "../../estilos/CabecalhoGeral.css";
+import CabecalhoGeral from "./CabecalhoGeral";
+import { pegarUsuarioAtual, usuarioEstaLogado } from "../contextos/Auth.jsx";
 
 export default function CabecalhoPaginaInicial() {
+  const estaLogado = usuarioEstaLogado();
+  const usuarioAtual = estaLogado ? pegarUsuarioAtual() : null;
+  const temImagemPerfil = usuarioAtual && usuarioAtual.imagemPerfil;
+
   return (
-    <>
-      <CabecalhoImagem>
-        <h1>Página Inicial</h1>
-        <div className="botaoPerfil">
-          <div className="fotoPerfil"><img src="banco-de-dados.sql" alt="imagem do artista" /></div>
-        </div>
-      </CabecalhoImagem>
-    </>
+    <CabecalhoGeral
+      titulo="Página Inicial"
+      mostrarBotaoSair={!!temImagemPerfil}
+      mostrarBotaoCriarPerfil={!temImagemPerfil}
+      imagemPerfil={temImagemPerfil ? usuarioAtual.imagemPerfil : null}
+    />
   );
 }

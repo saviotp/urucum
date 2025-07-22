@@ -2,38 +2,142 @@ import CabecalhoPaginaInicial from "../cabecalhos/CabecalhoPaginaInicial";
 import "./PaginaInicial.css";
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { database } from "../Firebase.jsx";
+import { ref, get, set } from "firebase/database";
+import { v4 as uuidv4 } from "uuid";
+import { criarOuGarantirUniqueId, normalizarNomeParaUrl } from "../classes/UsuarioUtils.jsx";
 
 export default function PaginaInicial() {
   const [artistas, setArtistas] = useState([]);
+  const [todosArtistas, setTodosArtistas] = useState([]);
   const [pesquisa, setPesquisa] = useState("");
+  const [pesquisaDebounced, setPesquisaDebounced] = useState("");
+  const [carregando, setCarregando] = useState(true);
+  const navegar = useNavigate();
 
+  /*
+    Essa parte fizemos com Copilot
+    Pelo que pesquisei, o debounce é pra tela não atualizar a cada letra que o usuário coloca
+    e sim esperar um tempo (300ms) após o usuário parar de digitar para atualizar a lista de artistas
+  */
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setPesquisaDebounced(pesquisa);
+    }, 300);
 
-    const procurarArtistas = async () => {
+    return () => clearTimeout(timer);
+  }, [pesquisa]);
 
-      const apiURL = `https://rickandmortyapi.com/api/character/?name=${pesquisa}`
-
+  /*
+    Carrega todo mundo
+  */
+  useEffect(() => {
+    const carregarTodosArtistas = async () => {
       try {
-        const resposta = await fetch(apiURL);
+        setCarregando(true);
+        const usuariosRef = ref(database, 'usuarios');
+        const snapshot = await get(usuariosRef);
 
-        if (!resposta.ok) {
-          if (resposta.status === 404) {
-            setArtistas([]);
-          } else {
-            console.error("Erro ao buscar artista:", resposta.status);
+        if (snapshot.exists()) {
+          const usuariosData = snapshot.val();
+          let artistasEncontrados = [];
+
+          // Conta quantos artistas tem cada nome artístico ou nome completo (se não houver nome artístico)
+          const nomeCount = {};
+          Object.keys(usuariosData).forEach(emailKey => {
+            const usuario = usuariosData[emailKey];
+            const nomeBase = usuario.nomeArtistico && usuario.nomeArtistico.trim().length > 0
+              ? usuario.nomeArtistico.trim().toLowerCase()
+              : (usuario.nomeCompleto || "").trim().toLowerCase();
+            if (nomeBase) {
+              nomeCount[nomeBase] = (nomeCount[nomeBase] || 0) + 1;
+            }
+          });
+
+          for (const emailKey of Object.keys(usuariosData)) {
+            const usuario = usuariosData[emailKey];
+            if (usuario.nomeArtistico || usuario.nomeCompleto) {
+              if (!usuario.uniqueId) {
+                usuario.uniqueId = await criarOuGarantirUniqueId(emailKey);
+              }
+              const nomeBase = usuario.nomeArtistico && usuario.nomeArtistico.trim().length > 0
+                ? usuario.nomeArtistico.trim().toLowerCase()
+                : (usuario.nomeCompleto || "").trim().toLowerCase();
+              artistasEncontrados.push({
+                id: emailKey,
+                nomeArtistico: usuario.nomeArtistico || "",
+                nomeCompleto: usuario.nomeCompleto || "",
+                imagemPerfil: usuario.imagemPerfil || "https://placehold.co/150",
+                imagemPrincipal: usuario.imagemPrincipal || "https://placehold.co/1200x700",
+                miniBiografia: usuario.miniBiografia || "",
+                tags: usuario.tags || [],
+                email: usuario.email,
+                uniqueId: usuario.uniqueId,
+                nomeDuplicado: nomeCount[nomeBase] > 1,
+                nomeBase
+              });
+            }
           }
+
+          // Ordena alfabeticamente pelo nomeBase
+          artistasEncontrados.sort((a, b) =>
+            a.nomeBase.localeCompare(b.nomeBase, 'pt-BR', { sensitivity: 'base' })
+          );
+
+          setTodosArtistas(artistasEncontrados);
+          setArtistas(artistasEncontrados);
         } else {
-          const dados = await resposta.json();
-          setArtistas(dados.results);
+          setTodosArtistas([]);
+          setArtistas([]);
         }
-      }
-      catch (erro) {
-        console.error("Erro ao buscar artistas:", erro);
+      } catch (error) {
+        console.error("Erro ao buscar artistas:", error);
+        setTodosArtistas([]);
+        setArtistas([]);
+      } finally {
+        setCarregando(false);
       }
     };
 
-    procurarArtistas();
-  }, [pesquisa]);
+    carregarTodosArtistas();
+  }, []);
+
+  /*
+    Filtra com base na pesquisa
+  */
+  useEffect(() => {
+    // Descobri que o trim tira espaços da frente e do final da string
+    if (pesquisaDebounced.trim() === "") {
+      setArtistas(todosArtistas);
+    } else {
+      const artistasFiltrados = todosArtistas.filter(artista => {
+        const pesquisaLower = pesquisaDebounced.toLowerCase().trim();
+        
+        // Dividir a pesquisa em palavras individuais
+        const palavrasPesquisa = pesquisaLower.split(/\s+/).filter(palavra => palavra.length > 0);
+        
+        // Busca por nome artístico
+        const nomeMatch = palavrasPesquisa.every(palavra => 
+          artista.nomeArtistico.toLowerCase().includes(palavra)
+        );
+
+        // Busca por nome completo
+        const nomeCompletoMatch = artista.nomeCompleto && palavrasPesquisa.every(palavra => 
+          artista.nomeCompleto.toLowerCase().includes(palavra)
+        );
+        
+        // Busca por tags - apenas correspondência exata
+        const tagMatch = palavrasPesquisa.some(palavra => 
+          artista.tags.some(tag => tag.toLowerCase() === palavra)
+        );
+
+        return nomeMatch || nomeCompletoMatch || tagMatch;
+      });
+      
+      setArtistas(artistasFiltrados);
+    }
+  }, [pesquisaDebounced, todosArtistas]);
   
   return (
     <>
@@ -53,27 +157,51 @@ export default function PaginaInicial() {
           </div>
 
           <div className="galeria-artistas">
-            {artistas.length === 0 ? (
-              <p className="nao-existe">Nenhum artista encontrado.</p>
+            {carregando ? (
+              <p className="carregando">Carregando artistas...</p>
+            ) : artistas.length === 0 ? (
+              <p className="nao-existe">
+                {pesquisaDebounced.trim() !== "" ? `Nenhum artista encontrado para "${pesquisaDebounced}".` : "Nenhum artista encontrado."}
+              </p>
             ) : (
-              artistas.map((artista, index) => (
-                <div key={index} className="cartinha-artista" onClick={() => {
+              artistas.map((artista, index) => {
+                // Nome para exibir e para URL
+                const nomeParaExibir = artista.nomeArtistico && artista.nomeArtistico.trim().length > 0
+                  ? artista.nomeArtistico
+                  : artista.nomeCompleto;
+                // Use encodeURIComponent para suportar alfabetos não latinos
+                const nomeParaURL = encodeURIComponent(
+                  artista.nomeArtistico && artista.nomeArtistico.trim().length > 0
+                    ? artista.nomeArtistico
+                    : artista.nomeCompleto
+                );
+                const usarUniqueId = !artista.nomeArtistico && artista.nomeDuplicado;
 
-                  /* 
-                    Também não sabia desse window.location.href,
-                    ele puxa o nome do artista e coloca na URL da página, assim cada artista vai ter uma página comn o link do seu nome
-                    vou só trocar pra ID (caso não tenha sido implementado)
-                  */
-
-                  window.location.href = `/perfil-artista?name=${artista.name}`;
-                }}>
-                  <img src={artista.image} alt={artista.name} />
-                  <div className="foto-perfil-artista">
-                    <img src={artista.image} alt={artista.name} />
+                return (
+                  <div key={index} className="cartinha-artista" onClick={() => {
+                    if (usarUniqueId && artista.uniqueId) {
+                      navegar(`/perfil-artista/${nomeParaURL}-${artista.uniqueId}`);
+                    } else {
+                      navegar(`/perfil-artista/${nomeParaURL}`);
+                    }
+                  }}>
+                    <img src={artista.imagemPrincipal} alt={`Obra principal de ${nomeParaExibir}`} />
+                    <div className="foto-perfil-artista">
+                      <img src={artista.imagemPerfil} alt={nomeParaExibir} />
+                    </div>
+                    <p className="nome-artista">{nomeParaExibir}</p>
+                    {artista.tags && artista.tags.length > 0 && (
+                      <div className="tags-artista">
+                        {artista.tags.map((tag, tagIndex) => (
+                          <span key={tagIndex} className="tag-item">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <p className="nome-artista">{artista.name}</p>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </main>
